@@ -1,5 +1,5 @@
 # DiscordJS v14 handler in TypeScript language
-### The code was written with the intent to use interactions, good luck with your development!
+### The emphasis in writing code was placed on commands with a slash, good luck with your development!
 
 - Necessary packages for the correct operation of the bot:
 ```
