@@ -1,5 +1,5 @@
 import { Client, Collection, Partials } from 'discord.js';
-    require('dotenv').config({ path: '.env' });
+import "dotenv/config";
 import fs from 'node:fs';
 import path from 'node:path';
 import Command from './Command';
