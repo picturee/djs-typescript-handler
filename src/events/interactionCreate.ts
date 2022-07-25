@@ -1,4 +1,3 @@
-'use strict';
 import Client from '../structures/Client';
 import { Interaction } from 'discord.js';
 

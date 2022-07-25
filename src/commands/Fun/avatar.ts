@@ -1,6 +1,4 @@
-'use strict';
-
-import { CommandInteraction } from 'discord.js';
+import { ApplicationCommandOptionType, ApplicationCommandType, ChatInputCommandInteraction } from 'discord.js';
 import Client from '../../structures/Client';
 import Command from '../../structures/Command';
 
@@ -9,16 +7,16 @@ export = class extends Command {
         super({
             name: 'avatar',
             description: 'View member avatar',
-            type: 1,
+            type: ApplicationCommandType.ChatInput,
             options: [{
                 name: 'member',
                 description: "View another member's avatar",
-                type: 3,
+                type: ApplicationCommandOptionType.User,
                 required: false,
             }],
         });
     };
-    public run(client: Client, interaction: CommandInteraction<'cached'>) {
+    public run(client: Client, interaction: ChatInputCommandInteraction) {
         if (!interaction.inCachedGuild()) return;
         const member = interaction.options.getMember('member') || interaction.member;
         return interaction.reply({ embeds: [{

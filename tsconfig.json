@@ -12,6 +12,7 @@
       "inlineSourceMap": true,
       "noImplicitAny": false,
       "allowJs": true,
-      "checkJs": true
+      "checkJs": true,
+      "alwaysStrict": true
     }
 }
