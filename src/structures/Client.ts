@@ -1,4 +1,4 @@
-import { Client, Collection, Partials } from 'discord.js';
+import { Client, Collection, GatewayIntentBits, Partials } from 'discord.js';
 import "dotenv/config";
 import fs from 'node:fs';
 import path from 'node:path';
@@ -9,7 +9,7 @@ export default class DiscordClient extends Client {
     public constructor() {
         super({
             allowedMentions: { parse: ['users', 'roles', 'everyone'], repliedUser: false },
-            intents: 131071,
+            intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildPresences],
             partials: [
                 Partials.Message, 
                 Partials.Channel, 

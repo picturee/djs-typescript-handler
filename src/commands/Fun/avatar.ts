@@ -1,5 +1,4 @@
-
-import { CommandInteraction } from 'discord.js';
+import { ApplicationCommandOptionType, ApplicationCommandType, ChatInputCommandInteraction } from 'discord.js';
 import Client from '../../structures/Client';
 import Command from '../../structures/Command';
 
@@ -17,7 +16,7 @@ export = class extends Command {
             }],
         });
     };
-    public run(client: Client, interaction: CommandInteraction<'cached'>) {
+    public run(client: Client, interaction: ChatInputCommandInteraction) {
         if (!interaction.inCachedGuild()) return;
         const member = interaction.options.getMember('member') || interaction.member;
         return interaction.reply({ embeds: [{
