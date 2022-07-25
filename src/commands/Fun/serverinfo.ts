@@ -1,4 +1,3 @@
-'use strict';
 import { CommandInteraction } from 'discord.js';
 import Client from '../../structures/Client';
 import Command from '../../structures/Command';

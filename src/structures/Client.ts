@@ -1,4 +1,3 @@
-'use strict';
 import { Client, Collection, Partials } from 'discord.js';
     require('dotenv').config({ path: '.env' });
 import fs from 'node:fs';
