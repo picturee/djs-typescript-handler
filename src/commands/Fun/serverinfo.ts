@@ -7,7 +7,7 @@ export = class extends Command {
         super({
             name: 'serverinfo',
             description: 'Server Information',
-            type: 1,
+            type: ApplicationCommandType.ChatInput,
             options: [],
         });
     };

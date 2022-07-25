@@ -5,7 +5,7 @@ export = (client: Client) => {
     console.log(`[INFORMATION] - Bot launched. Authorized as ${client.user?.tag} | Servers: ${client.guilds.cache.size} | Users: ${client.users.cache.size}
         [INFORMATION] - Time: ${new Date().toLocaleTimeString('ru-RU', { timeZone: 'Europe/Moscow'})}
         [INFORMATION] - RAM: ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB`);
-    client.user?.setPresence({ activities: [{ name: 'picturee production', type: 2 }], status: 'idle' });
+    client.user?.setPresence({ activities: [{ name: 'picturee production', type: ActivityType.Listening }], status: 'idle' });
     
     const commands: any = [];
     client.commands.each(command => commands.push(command.config));
