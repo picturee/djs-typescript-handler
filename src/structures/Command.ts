@@ -1,21 +1,20 @@
-'use strict';
-
-import { ApplicationCommandOptionData } from 'discord.js';
+import { ApplicationCommandOptionData, ChatInputCommandInteraction } from 'discord.js';
+import Client from './Client';
 
 export default class Command {
-    config: CommandOptions;
-    constructor(config: CommandOptions) {
-        this.config = config;
+    structur: options;
+    constructor(structur: options) {
+        this.structur = structur;
     };
-    public run (client: any, interaction: any) {
-        throw new Error(`The function to run the command ${this.config.name} is not specified`);
+    public run(client: Client, interaction: ChatInputCommandInteraction) {
+        throw new Error(`The function to run the command ${this.structur.name} is not specified`);
     };
 };
 
-export interface CommandOptions {
+export interface options {
     name: string;
-    description?: string;
-    type?: string | Number;
+    description: string;
+    type?: string | number;
     options?: ApplicationCommandOptionData[];
-    cooldown?: Number;
+    cooldown?: number;
 };

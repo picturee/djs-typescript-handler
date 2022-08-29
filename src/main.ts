@@ -1,4 +1,3 @@
-'use strict';
 import DiscordClient from './structures/Client';
-export const client = new DiscordClient();
-client.start();
+export const client: DiscordClient = new DiscordClient();
+client.login(process.env.token);

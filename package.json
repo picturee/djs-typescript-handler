@@ -3,15 +3,18 @@
     "description": "DiscordJS v14 handler in TypeScript language",
     "version": "1.0.0",
     "private": true,
-    "author": "picturee",
     "main": "src/main.ts",
+    "author": "picturee",
     "scripts": {
-        "start": "npx ts-node-dev ."
+        "build": "tsc",
+        "start": "node build/main.js",
+        "start:dev": "ts-node-dev src/main.ts"
     },
     "license": "ISC",
     "dependencies": {
-        "discord.js": "^14.0.3",
+        "discord.js": "^14.3.0",
         "dotenv": "^16.0.1",
-        "ts-node-dev": "^2.0.0"
+        "ts-node-dev": "^2.0.0",
+        "typescript": "^4.8.2"
     }
 }

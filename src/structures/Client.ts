@@ -1,49 +1,47 @@
-'use strict';
-import { Client, Collection, Partials } from 'discord.js';
-    require('dotenv').config({ path: '.env' });
-import fs from 'node:fs';
-import path from 'node:path';
-import Command from './Command';
+import { Client, ClientEvents, Collection, Partials } from 'discord.js';
+import 'dotenv/config';
 
-export default class DiscordClient extends Client {
-    public commands: Collection<string, Command> = new Collection();
-    public constructor() {
-        super({
+import { readdir, stat } from 'node:fs/promises';
+import path from 'node:path';
+
+import Command from './Command';
+import Event from './Event';
+
+export default class DiscordClient extends Client<true> {
+    public readonly commands: Collection<string, Command> = new Collection();
+    constructor() {
+        super({ 
             allowedMentions: { parse: ['users', 'roles', 'everyone'], repliedUser: false },
             intents: 131071,
-            partials: [
-                Partials.Message, 
-                Partials.Channel, 
-                Partials.Reaction, 
-                Partials.User, 
-                Partials.GuildMember, 
-                Partials.ThreadMember, 
-                Partials.GuildScheduledEvent
-            ],
+            partials: [ Partials.Message, Partials.Channel, Partials.Reaction, Partials.User, Partials.GuildMember, Partials.ThreadMember, Partials.GuildScheduledEvent ],
         });
     };
-    public start() {
-        this.login(process.env.token).then(() => {
-            this.eventsLoad();
-            this.commandsLoad();
-        }).catch(() => process.exit(1));
+    public override async login(token?: string) {
+        await Promise.all([ 
+                this.commandLoader(process.cwd() + '/src/commands'), 
+                this.eventLoader(process.cwd() + '/src/events')
+            ]);
+        return super.login(token);
     };
-    public eventsLoad() {
-        fs.readdirSync(path.resolve(__dirname, '..', 'events')).filter(name => name.endsWith('.ts')).forEach(async (file: string) => {
-            const event = (await import(path.join(__dirname, '..', 'events', file))).default;
-            const eventname = file.split('.')[0];
-            this.on(eventname, event.bind(null, this));
-            delete require.cache[require.resolve(path.resolve(__dirname, '..', 'events', file))]; // If you are going to reload events in the future
-        });
-    }; 
-    public commandsLoad() {
-        fs.readdirSync(path.resolve(__dirname, '..', 'commands')).forEach((category: string) => {
-            const commands = fs.readdirSync(path.resolve(__dirname, '..', 'commands', category)).filter(file => file.endsWith('.ts'));
-            commands.forEach(async (file: string) => {
-                const command: Command = new ((await import(path.resolve(__dirname, '..', 'commands', category, file))).default);
-                this.commands.set(command.config?.name, command);
-                delete require.cache[require.resolve(path.resolve(__dirname, '..', 'commands', category, file))]; // If you are going to reload commands in the future
-            }); 
-        });
+    private async eventLoader(paths: string) {
+        if ((await stat(paths)).isDirectory()) {
+            return (await readdir(path.resolve(paths))).filter((name: string) => name.endsWith('.ts') || name.endsWith('.js')).forEach(async (file: string) => {
+                const event: Event<keyof ClientEvents> = ((await import(path.resolve(paths, file)))?.default);
+                this.on(event.event, (...args) => event.listener(this, ...args));
+                delete require.cache[require.resolve(path.resolve(paths, file))];
+            });
+        };
+    };
+    private async commandLoader(paths: string) {
+        if ((await stat(paths)).isDirectory()) {
+            return (await readdir(path.resolve(paths))).forEach(async (category: string) => {
+                const commands: string[] = (await readdir(path.resolve(paths, category))).filter((name: string) => name.endsWith('.ts') || name.endsWith('.js'));
+                return commands.forEach(async (file: string) => {
+                    const command: Command = new ((await import(path.resolve(paths, category, file)))?.default);
+                    this.commands.set(command.structur.name, command);
+                    delete require.cache[require.resolve(path.resolve(paths, category, file))];
+                });
+            });
+        };
     };
 };

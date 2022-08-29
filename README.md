@@ -4,6 +4,7 @@
 - Necessary packages for the correct operation of the bot:
 ```
 - discord.js
-- ts-node-dev
 - dotenv
+- ts-node-dev
+- typescript
 ```
