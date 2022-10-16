@@ -1,29 +1,23 @@
-import { ChatInputCommandInteraction, GuildMember } from 'discord.js';
+import { ChatInputCommandInteraction, EmbedBuilder, GuildMember, SlashCommandBuilder } from 'discord.js';
 import Client from '../../structures/Client';
 import Command from '../../structures/Command';
 
 export default class extends Command {
     constructor() {
         super({
-            name: 'avatar',
-            description: 'View member avatar',
-            type: 1,
-            options: [{
-                name: 'member',
-                description: "View another member's avatar",
-                type: 6,
-                required: false,
-            }],
-        });
-    };
-    public run(client: Client, interaction: ChatInputCommandInteraction<'cached'>) {
+            data: new SlashCommandBuilder().setName('avatar').setDescription('View member avatar').addUserOption(option =>
+                option.setName('member').setDescription("View another member's avatar").setRequired(false)),
+            });
+        };
+    public async run(client: Client, interaction: ChatInputCommandInteraction<'cached'>) { 
         if (!interaction.inCachedGuild()) return;
         const member: GuildMember = interaction.options.getMember('member') || interaction.member;
-        return interaction.reply({ embeds: [{
-                title: `Member avatar ${interaction.member.displayName}`,
-                color: 0x276DAB,
-                image: { url: member.displayAvatarURL({ size: 1024 }) }, 
-            }],
+            await interaction.deferReply().catch((e: Error) => console.error(e));
+        return interaction.editReply({ embeds: [new EmbedBuilder()
+            .setTitle(`Member avatar ${interaction.member.displayName}`)
+                .setColor('DarkVividPink')
+                .setImage(member.displayAvatarURL({ size: 1024 }))
+            ],
         });
     };
 };
